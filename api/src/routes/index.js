@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const axios = require("axios");
-const Dog = require('../models/Dog');
-const { dog , Temperament} = require ('../db')
+const { Dog , Temperament} = require ('../db')
 const {
     API_KEY,
   } = process.env;
@@ -15,13 +14,13 @@ const router = Router();
 // Ejemplo: router.use('/auth', authRouter);
 
 const getApiInf = async()=>{
- const apiUrl= await axios.get( `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`)
- const apiInfo = await apiUrl.data.map(el => {
+ const { data } = await axios.get( `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`)
+ const apiInfo = await data.map(el => {
     return {
         id:el.id,
         name: el.name,
-        height:el.height.map(el => el),
-        weight:el.weight.map(el => el),
+        height: el.height,
+        weight: el.weight,
         life_span:el.life_span,
         temperament: el.temperament
     }
@@ -30,11 +29,11 @@ const getApiInf = async()=>{
 }
 
 const getDBinfo = async() => {
-    return await dog.findAll({
+    return await Dog.findAll({
         include:{
             model: Temperament,
             atributes: ['name'],
-            through: {
+            through: {  
                 atributes: [],
             },
         }
@@ -57,7 +56,7 @@ router.get('/dogs', async (req, res)=>{
         res.status(200).send(dogName):
         res.status(400).send('the dog does not exist')
     } else {
-        res.status(200).send(getAllDogs)
+        res.status(200).send(allDogs)
     }
 
 
