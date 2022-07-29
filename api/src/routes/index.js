@@ -58,7 +58,34 @@ router.get('/dogs', async (req, res)=>{
     } else {
         res.status(200).send(allDogs)
     }
+});
 
+router.get('/dogs/:id', async(req,res)=>{
+    const {id} = req.params;
+    const dogs = await getAllDogs()
+    const dog = dogs.find(el => el.id.toString() === id.toString())
+    if (dog){
+        res.status(200).send(dog)
+    }else {
+        res.status(400).send('The dog dont exist')
+    }
+});
+
+router.get('/temperaments', async (req, res)=> {
+    const dogs = await getApiInf();
+    const temperaments = dogs.map(el => el.temperament);
+    const arrTemp = [];
+    for(i of temperaments){
+        const newArr = i?.split(', ');
+        arrTemp.push(newArr);
+    };
+    let finalTemps = arrTemp.flat()
+    const tempDB = finalTemps.map(el => {
+        Temperament.findOrcreate({
+            where : { name : el}
+        })
+    }) 
+    console.log(finalTemps);
 
 })
 
