@@ -1,9 +1,8 @@
 const { Router } = require('express');
 const axios = require("axios");
 const { Dog , Temperament} = require ('../db')
-const {
-    API_KEY,
-  } = process.env;
+const { API_KEY } = process.env;
+
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 
@@ -79,14 +78,28 @@ router.get('/temperaments', async (req, res)=> {
         const newArr = i?.split(', ');
         arrTemp.push(newArr);
     };
-    let finalTemps = arrTemp.flat()
-    const tempDB = finalTemps.map(el => {
-        Temperament.findOrcreate({
-            where : { name : el}
-        })
-    }) 
-    console.log(finalTemps);
+    let finalTemps = arrTemp.flat();
+    finalTemps.forEach( el  => {
+        if (el) {
+            Temperament.findOrCreate({
+                where: {name: el}
+            })
+        }
+    });
+    const allTemps = await Temperament.findAll();
+    res.send(allTemps);
+});
 
-})
+router.post('/dogs', async(req,res)=>{
+    const {name, height, weight, life_span, temperament} = req.body
+    let createDog = await Dog.create({
+        name, height, weight, life_span
+    });
+    let temperamentDb = await Temperament.findAll({
+        where : { name:temperament }
+    });
+    createDog.addTemperament(temperamentDb) 
+    res.send('the dog was created')   
+});
 
 module.exports = router;
