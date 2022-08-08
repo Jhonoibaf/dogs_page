@@ -18,6 +18,7 @@ const getApiInf = async()=>{
     return {
         id:el.id,
         name: el.name,
+        image: el.image.url,
         height: el.height,
         weight: el.weight,
         life_span:el.life_span,
@@ -48,7 +49,7 @@ const getAllDogs = async() => {
 
 router.get('/dogs', async (req, res)=>{
     const name = req.query.name;
-    let allDogs = await getAllDogs();
+    let allDogs = await getApiInf();
     if(name){
         let dogName = await allDogs.filter(data => data.name.toLowerCase().includes(name.toLowerCase()));
         dogName.length? 
@@ -91,9 +92,9 @@ router.get('/temperaments', async (req, res)=> {
 });
 
 router.post('/dogs', async(req,res)=>{
-    const {name, height, weight, life_span, temperament} = req.body
+    const {name, height, weight, life_span, temperament, image} = req.body
     let createDog = await Dog.create({
-        name, height, weight, life_span
+        name, height, weight, life_span, image
     });
     let temperamentDb = await Temperament.findAll({
         where : { name:temperament }

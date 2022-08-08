@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import getDogs from "../actions";
 import { Link } from "react-router-dom";
 import Card from "./Card"; 
+import { Fragment } from "react";
 
 export default function Home (){
     const dispatch = useDispatch();
@@ -35,15 +36,13 @@ export default function Home (){
                     <option value={'Rexi'}>Raza Existentes</option>
                     <option value={'Rcre'}>Raza Creadas</option>
                 </select>
-            </div>
             <div>
-                {
-                    allDogs && allDogs.map(el => {
+            {allDogs?.map((el) => {
                         return(
-                            <Card image={el.image} name={el.name} temperament={el.temperament} weight={el.weight}/>
+                             <Card image={el.image} name={el.name} temperament={el.temperament} weight={el.weight}/> 
                         )
-                    })
-                }
+                    })}
+            </div>
             </div>
         </div>
     )
