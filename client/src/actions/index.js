@@ -15,6 +15,7 @@ export function getDogs () {
 };
 
 export function filterDb (payload) {
+    // A comment
        return{
         type:'FILTER_CREATEDDB',
         payload
