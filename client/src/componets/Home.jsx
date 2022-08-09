@@ -1,14 +1,24 @@
 import React from "react";
 import {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import getDogs from "../actions";
+import {getDogs,filterDb} from "../actions";
 import { Link } from "react-router-dom";
 import Card from "./Card"; 
 import { Fragment } from "react";
+import Paginado from "./Paginado";
 
 export default function Home (){
     const dispatch = useDispatch();
     const allDogs = useSelector((state) => state.dogs) 
+    const [currentPage, setCurrentPage]= useState(1)
+    const [dogsForPage,setDogsForPage]= useState(8)
+    const countOfLastDog = currentPage * dogsForPage
+    const countOfFirstDog= countOfLastDog - dogsForPage
+    const currentDogs = allDogs.slice(countOfFirstDog,countOfLastDog)
+    
+    const paginado = (pageNum)=>{
+        setCurrentPage(pageNum)
+    }
 
     useEffect (()=>{
         dispatch(getDogs())
@@ -17,6 +27,10 @@ export default function Home (){
     function handelClick(e){
         e.preventDefault();
         dispatch(getDogs())
+    }
+
+    function handelFilterDb(e){
+        dispatch(filterDb(e.target.value))
     }
     return (
         <div>
@@ -32,14 +46,24 @@ export default function Home (){
                     <option value={'OrdA'}>Orden Alfabetico</option>
                     <option value= {'Pse'}>Peso</option>
                 </select>
-                <select>
-                    <option value={'Rexi'}>Raza Existentes</option>
-                    <option value={'Rcre'}>Raza Creadas</option>
+                <select onChange={e => handelFilterDb(e)}>
+                    <option value={'api'}>Raza Existentes</option>
+                    <option value={'created'}>Raza Creadas</option>
+                    <option value={'All'}>Todos</option>
                 </select>
+                <Paginado
+                dogsForPage ={dogsForPage}
+                allDogs = {allDogs.length}
+                paginado = {paginado}
+                />
             <div>
-            {allDogs?.map((el) => {
+            {currentDogs?.map((el) => {
                         return(
-                             <Card image={el.image} name={el.name} temperament={el.temperament} weight={el.weight}/> 
+                            <Fragment key={el.id}>
+                                <Link to={'/home/' + el.id}>
+                                <Card image={el.image} name={el.name} temperament={el.temperament} weight={el.weight}/> 
+                                </Link>
+                            </Fragment>
                         )
                     })}
             </div>

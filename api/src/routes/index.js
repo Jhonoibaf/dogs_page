@@ -44,12 +44,13 @@ const getAllDogs = async() => {
     const apiInfo = await getApiInf();
     const dbInfo = await getDBinfo();
     const allInfo = apiInfo.concat(dbInfo);
+    console.log('love mi perro' + {dbInfo});
     return allInfo
 };
 
 router.get('/dogs', async (req, res)=>{
     const name = req.query.name;
-    let allDogs = await getApiInf();
+    let allDogs = await getAllDogs();
     if(name){
         let dogName = await allDogs.filter(data => data.name.toLowerCase().includes(name.toLowerCase()));
         dogName.length? 
@@ -92,9 +93,10 @@ router.get('/temperaments', async (req, res)=> {
 });
 
 router.post('/dogs', async(req,res)=>{
-    const {name, height, weight, life_span, temperament, image} = req.body
+    const {name, height, weight, life_span, temperament} = req.body
+    console.log('id error john' + name)
     let createDog = await Dog.create({
-        name, height, weight, life_span, image
+        name, height, weight, life_span
     });
     let temperamentDb = await Temperament.findAll({
         where : { name:temperament }
@@ -104,3 +106,4 @@ router.post('/dogs', async(req,res)=>{
 });
 
 module.exports = router;
+    
