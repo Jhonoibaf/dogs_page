@@ -15,9 +15,22 @@ export function getDogs () {
 };
 
 export function filterDb (payload) {
-    // A comment
        return{
         type:'FILTER_CREATEDDB',
+        payload
+    }
+}
+
+export function orderByName (payload){
+    return{
+        type:'ORDER_BY_NAME',
+        payload
+    }
+}
+
+export function orderByWeight (payload){
+    return{
+        type:'ORDER_BY_WEIGHT',
         payload
     }
 }

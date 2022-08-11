@@ -1,7 +1,7 @@
 import React from "react";
 import {useState, useEffect} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {getDogs,filterDb} from "../actions";
+import { useDispatch, useSelector} from 'react-redux';
+import {getDogs,filterDb,orderByName, orderByWeight} from "../actions";
 import { Link } from "react-router-dom";
 import Card from "./Card"; 
 import { Fragment } from "react";
@@ -10,6 +10,7 @@ import Paginado from "./Paginado";
 export default function Home (){
     const dispatch = useDispatch();
     const allDogs = useSelector((state) => state.dogs) 
+    const [order, serOrder] = useState('')
     const [currentPage, setCurrentPage]= useState(1)
     const [dogsForPage,setDogsForPage]= useState(8)
     const countOfLastDog = currentPage * dogsForPage
@@ -32,24 +33,39 @@ export default function Home (){
     function handelFilterDb(e){
         dispatch(filterDb(e.target.value))
     }
+
+    function handelOrderName(e){
+        e.preventDefault();
+        dispatch(orderByName(e.target.value)) 
+        setCurrentPage(1) 
+        serOrder(`Ordenado ${e.target.value}`) 
+    }
+
+    function handelOrderWeight(e){
+        e.preventDefault();
+        dispatch(orderByWeight(e.target.value)) 
+        setCurrentPage(1) 
+        serOrder(`Ordenado ${e.target.value}`) 
+    }
+
     return (
         <div>
             <Link to='/Dog'>Crear nueva raza</Link>
             <h1>PELUDOS</h1>
             <button onClick={e=> {handelClick(e)}}>Recargar todas las razas</button>
             <div>
-                <select>
+                <select onClick={e=> {handelOrderWeight(e)}}>Weight
                     <option value={'Asc'}>Ascendente</option>
                     <option value= {'Desc'}>Descendente</option>
                 </select>
-                <select>
-                    <option value={'OrdA'}>Orden Alfabetico</option>
-                    <option value= {'Pse'}>Peso</option>
+                <select onChange={e => handelOrderName(e)}>Alphabetical
+                    <option value={'OrdA'}>A-Z</option>
+                    <option value= {'Pse'}>Z-A</option>
                 </select>
                 <select onChange={e => handelFilterDb(e)}>
-                    <option value={'api'}>Raza Existentes</option>
-                    <option value={'created'}>Raza Creadas</option>
-                    <option value={'All'}>Todos</option>
+                    <option value={'All'}>All</option>
+                    <option value={'api'}>Existing</option>
+                    <option value={'created'}>Created</option>
                 </select>
                 <Paginado
                 dogsForPage ={dogsForPage}
