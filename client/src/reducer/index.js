@@ -28,13 +28,22 @@ export default function rootReducer (state = initialState, action){
                 dogs: action.payload,
                 allDBDogs: action.payload
             }; 
-       case 'FILTER_CREATEDDB':
+        case 'FILTER_CREATEDDB':
            const dogsApiDb = state.allDBDogs
            const filterCreated = action.payload === 'created'? dogsApiDb.filter(el => el.createInDb) : dogsApiDb.filter(el => !el.createInDb)
             return {
                 ...state,
                 dogs: action.payload === 'All'? state.allDBDogs: filterCreated,
             };
+        case 'GET_NAME_INFO':
+              return{
+                ...state,
+                dogs: action.payload
+              }
+        case 'POST_DOG_INFO':
+              return{
+                ...state,
+              }
         case 'ORDER_BY_NAME':
             const orderDogs = action.payload === 'OrdA'?
             state.dogs.sort(function (a, b) {
