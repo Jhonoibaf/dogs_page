@@ -2,6 +2,7 @@
 const initialState = {
     dogs: [],
     allDBDogs: [],
+    temperaments: []
 }
 
 function getMaxWeight (objeto){
@@ -43,6 +44,11 @@ export default function rootReducer (state = initialState, action){
         case 'POST_DOG_INFO':
               return{
                 ...state,
+              }
+        case 'GET_TEMPERAMETS':
+              return{
+                ...state,
+                temperaments: action.payload
               }
         case 'ORDER_BY_NAME':
             const orderDogs = action.payload === 'OrdA'?

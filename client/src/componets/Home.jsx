@@ -51,7 +51,7 @@ export default function Home (){
 
     return (
         <div>
-            <Link to='/Dog'>Crear nueva raza</Link>
+            <Link to='/newdog'>Crear nueva raza</Link>
             <h1>PELUDOS</h1>
             <button onClick={e=> {handelClick(e)}}>Recargar todas las razas</button>
             <div>
