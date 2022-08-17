@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 export function getDogs () {
     return async function(dispatch){
@@ -52,8 +52,25 @@ export function postDogInfo(payload){
             var info = await axios.post('http://localhost:3001/dogs', payload)
             return dispatch({
                 type: 'POST_DOG_INFO',
-                info
+                info    
             })
+        } catch(error){
+        console.error(error);
+        }
+    }
+}
+
+export function detailDog(id){
+    return async function(dispatch){
+        try{
+            var info = await axios.get(`http://localhost:3001/dogs/${id}`)
+            console.log(info.data);
+            return dispatch(
+                {
+                    type: 'GET_DETAIL_INFO',
+                    payload: info.data
+                }
+            )
         } catch(error){
         console.error(error);
         }

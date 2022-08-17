@@ -2,11 +2,12 @@
 const initialState = {
     dogs: [],
     allDBDogs: [],
-    temperaments: []
+    temperaments: [],
+    detail: []
 }
 
 function getMaxWeight (objeto){
-  const weight = objeto.weight.metric
+  const weight = objeto.weight
   const maxWeight = weight?.split(' - ')[1]
   if(maxWeight){
     return parseInt(maxWeight)}
@@ -14,7 +15,7 @@ function getMaxWeight (objeto){
 };
 
 function getMinWeight (objeto){
-  const weight = objeto.weight.metric
+  const weight = objeto.weight
   const minWeight = weight?.split(' - ')[0]
   if(minWeight){
     return parseInt(minWeight)}
@@ -87,6 +88,11 @@ export default function rootReducer (state = initialState, action){
             return{
                 ...state,
                 dogs: orderbyWeight
+            }
+        case 'GET_DETAIL_INFO':
+            return{
+              ...state,
+              detail: action.payload,
             }
         default:
             return state;

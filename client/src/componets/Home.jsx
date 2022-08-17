@@ -7,6 +7,7 @@ import Card from "./Card";
 import { Fragment } from "react";
 import Paginado from "./Paginado";
 import SearchBar from "./SearchBar";
+import './Home.css'
 
 export default function Home (){
     const dispatch = useDispatch();
@@ -74,7 +75,7 @@ export default function Home (){
                 allDogs = {allDogs.length}
                 paginado = {paginado}
                 />
-            <div>
+            <div className='card-container'>
             {currentDogs?.map((el) => {
                         return(
                             <Fragment key={el.id}>

@@ -19,8 +19,8 @@ const getApiInf = async()=>{
         id:el.id,
         name: el.name,
         image: el.image.url,
-        height: el.height,
-        weight: el.weight,
+        height: el.height.metric,
+        weight: el.weight.metric,
         life_span:el.life_span,
         temperament: el.temperament
     }
@@ -42,7 +42,7 @@ const getDBinfo = async() => {
 
 const getAllDogs = async() => {
     const apiInfo = await getApiInf();
-    const dbInfo = await getDBinfo();
+    let dbInfo = await getDBinfo();
     const allInfo = apiInfo.concat(dbInfo);
     console.log('love mi perro' + {dbInfo});
     return allInfo
@@ -93,10 +93,10 @@ router.get('/temperaments', async (req, res)=> {
 });
 
 router.post('/dogs', async(req,res)=>{
-    const {name, height, weight, life_span, temperament} = req.body
-    console.log('id error john' + name)
+    const {name, height, weight, life_span, image, temperament} = req.body
+    console.log(image)
     let createDog = await Dog.create({
-        name, height, weight, life_span
+        name, height, weight, image, life_span
     });
     let temperamentDb = await Temperament.findAll({
         where : { name:temperament }

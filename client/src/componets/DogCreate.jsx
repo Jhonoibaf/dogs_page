@@ -7,17 +7,22 @@ import { Link, useHistory  } from "react-router-dom";
 function validate(input){
     let errors = {}
     if(!input.name){
-        input.name = 'El nombre es necesario'
+        errors.name = 'El nombre es necesario'
     }else if (!input.height){
-        input.height = 'La altura es necesaria'
+        errors.height = 'La altura es necesaria'
     }else if (!input.weight){
-        input.weight = 'El peso es necesario'
+        errors.weight = 'El peso es necesario'
     }else if (!input.life_span){
-        input.life_span = 'La esperanza de vida es necesaria'
+        errors.life_span = 'La esperanza de vida es necesaria'
     }
-    else if (!input.life_span){
-        input.life_span = 'La esperanza de vida es necesaria'
+    else if (!input.image){
+        errors.image = 'La imagen es necesaria'
     }
+    else if(input.temperament.length<1){
+        errors.temperament='Debes seleccionar al menos un temperamento'
+    }
+
+    return errors
 }
 
 export default function DogCreate(){
@@ -32,6 +37,7 @@ export default function DogCreate(){
         image:"", 
         temperament:[]
     })
+    const [errors, setErrors]= useState({})
 
     useEffect(()=>{
         dispatch(getTemperaments())
@@ -42,6 +48,10 @@ export default function DogCreate(){
             ...input,
             [e.target.name] : e.target.value
         })
+        setErrors(validate({
+            ...input,
+            [e.target.name]: e.target.value
+        }))
     }
 
     function hadleSelect(e){
@@ -65,6 +75,12 @@ export default function DogCreate(){
         })
         history.push('/home')
     }
+    function handleDelete(el){
+        setInput({
+            ...input,
+            temperament: input.temperament.filter(temp => temp !== el)
+        })
+    }
 
 
     return(
@@ -74,49 +90,74 @@ export default function DogCreate(){
             <h1>Crea un nuevo peludo</h1>
             <form onSubmit={(e)=>handleSubmmit(e)}>
                 <div>
-                <label>Name</label>
+                <label>Nombre de Raza</label>
                 <input
                     type='text'
                     value={input.name}
                     name='name'
-                    onChange={hadleChange}
+                    onChange={(e)=> hadleChange(e)}
                 />
+                {
+                    errors.name && (
+                    <p>{errors.name}</p>
+                    )
+                }
                 </div>
                 <div>
-                <label>Height</label>
+                <label>Rango de Altura</label>
                 <input
                     type='text'
                     value={input.height}
                     name='height'
                     onChange={hadleChange}
                 />
+               {
+                    errors.height && (
+                    <p>{errors.height}</p>
+                    )
+                }
                 </div>
                 <div>
-                <label>Weight</label>
+                <label>Rango de peso</label>
                 <input
                     type='text'
                     value={input.weight}
                     name='weight'
                     onChange={hadleChange}
                 />
+                {
+                    errors.weight && (
+                    <p>{errors.weight}</p>
+                    )
+                }
                 </div>
                 <div>
-                <label>Life span</label>
+                <label>Esperanza de vida</label>
                 <input
                     type='text'
                     value={input.life_span}
                     name='life_span'
                     onChange={hadleChange}
                 />
+                {
+                    errors.life_span && (
+                    <p>{errors.life_span}</p>
+                    )
+                }
                 </div>
                 <div>
-                <label>Image</label>
+                <label>Imagen</label>
                 <input
                     type='text'
                     value={input.image}
                     name='image'
                     onChange={hadleChange}
-                />
+                /> 
+                {
+                    errors.image && (
+                    <p>{errors.image}</p>
+                    )
+                }
                 </div>
                 <select onChange={(e)=>hadleSelect(e)}>
                     {
@@ -125,9 +166,22 @@ export default function DogCreate(){
                         ))
                     }
                 </select>
-                <ul><li>{input.temperament.map(el => el + " , ")}</li></ul>
-                <button type='submit'>Crear!</button>
+               {
+                    errors.temperament && (
+                    <p>{errors.temperament}</p>
+                    )
+                }
+                
+                <button type='submit'>Crear nuevo perro!</button>
             </form>
+            {
+                input.temperament.map(el=>
+                    <div>
+                        <p>{el}</p>
+                        <button onClick={()=>handleDelete(el)}>X</button>
+                    </div>
+                        )
+            }
         </div>
         </div>
     )
